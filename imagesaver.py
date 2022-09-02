@@ -1,7 +1,5 @@
 import textwrap
 import randfacts
-import pyttsx3
-import time
 from PIL import Image, ImageDraw, ImageFont
 from gtts import gTTS
 
