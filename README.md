@@ -15,7 +15,7 @@ It just take 5  random facts from random facts library and save it as a image an
 Then the the video converter file takes all all the audios and images and by some simple placements it convert into a video
 And in final it takes audio and append it to final video file
 # Libraries used in this programme
-| Color             | Hex                                                                |
+| Library             | Usage                                                                |
 | ----------------- | ------------------------------------------------------------------ |
 | textwrap | For wrapping the text into a width in an image pil does not support this feature |
 | randfacts | For fetching list of randfacts |
