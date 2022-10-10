@@ -1,30 +1,33 @@
 from moviepy.editor import *
 from imagesaver import gen_sou
+import os
 
-gen_sou(5)
+gen_sou(3)
 
-audio1 = AudioFileClip("audio/speech0.mp3")
-audio2 = AudioFileClip("audio/speech1.mp3")
-audio3 = AudioFileClip("audio/speech2.mp3")
-audio4 = AudioFileClip("audio/speech3.mp3")
-audio5 = AudioFileClip("audio/speech4.mp3")
-audio1end = audio1.duration + 1
-audio2end = audio2.duration + audio1end + 1
-audio3end = audio3.duration + audio2end + 1
-audio4end = audio4.duration + audio3end + 1
-final = CompositeAudioClip([audio1.set_start(0), audio2.set_start(audio1end), audio3.set_start(audio2end),
-                            audio4.set_start(audio3end), audio5.set_start(audio4end)])
+audiofolder = "audio/"
+audio_files = os.listdir(audiofolder)
+imagesfolder = "images/"
+image_files = os.listdir(imagesfolder)
 
-audioclip = final.set_fps(44100)
-audioclip.write_audiofile("audio.mp3")
-image1 = ImageClip("images/img0.png").set_duration(audio1.duration+1)
-image2 = ImageClip("images/img1.png").set_duration(audio2.duration+1)
-image3 = ImageClip("images/img2.png").set_duration(audio3.duration+1)
-image4 = ImageClip("images/img3.png").set_duration(audio4.duration+1)
-image5 = ImageClip("images/img4.png").set_duration(audio5.duration+1)
 
-videofinalfile = CompositeVideoClip([image1.set_start(0), image2.set_start(audio1end),
-                                     image3.set_start(audio2end), image4.set_start(audio3end),
-                                     image5.set_start(audio4end)])
-videofinalfile.audio = AudioFileClip("audio.mp3")
-videofinalfile.write_videofile("hehe.mp4", fps=24)
+audio_clips = [AudioFileClip(f"audio/speech{i}.mp3") for i in range(len(audio_files))]
+audio_concat = concatenate_audioclips(audio_clips)
+audio_composite = CompositeAudioClip([audio_concat])
+audioclip = audio_composite.set_fps(44100)
+audioclip.write_audiofile("finalaudio.mp3")
+
+images_clips_list = []
+for i in range(0, len(image_files)):
+        images_clips_list.append(
+            ImageClip(f"images/img{i}.png")
+            .set_duration(audio_clips[i].duration)
+        )
+image_concat = concatenate_videoclips(images_clips_list)
+image_concat.audio = AudioFileClip("finalaudio.mp3")
+image_concat.write_videofile("finalvideo.mp4", fps=24)
+os.remove("finalaudio.mp3")
+for i in range(len(image_files)):
+    os.remove(f"images/img{i}.png")
+    os.remove(f"audio/speech{i}.mp3")
+
+    
